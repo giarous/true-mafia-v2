@@ -128,11 +128,11 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.truemafia"
+        applicationId "com.truemafia.v2"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
-        versionName "1.0"
+        versionCode 2
+        versionName "2.0"
     }
     splits {
         abi {
