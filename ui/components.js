@@ -1,10 +1,9 @@
-import React from "react";
+import React, { createContext, useContext, useState } from "react";
 import {
   Image,
   KeyboardAvoidingView,
   Platform,
   SafeAreaView,
-  ScrollView,
   StatusBar,
   StyleSheet,
   Text,
@@ -13,7 +12,12 @@ import {
 } from "react-native";
 import { colors } from "./theme";
 
-export function Screen({ children, centered = false }) {
+// Measure the usable area, including Android resize when the keyboard opens.
+const LayoutContext = createContext({ compact: false, dense: false });
+export function Screen({ children, centered = false, branded = true }) {
+  const [height, setHeight] = useState(800);
+  const compact = height < 660;
+  const dense = height < 430;
   return (
     <SafeAreaView style={styles.screen}>
       <StatusBar barStyle="light-content" backgroundColor={colors.background} />
@@ -21,44 +25,79 @@ export function Screen({ children, centered = false }) {
         style={styles.screen}
         behavior={Platform.OS === "ios" ? "padding" : undefined}
       >
-        <ScrollView
-          keyboardShouldPersistTaps="handled"
-          contentContainerStyle={[styles.content, centered && styles.centered]}
+        <View
+          testID="screen-viewport"
+          onLayout={event => setHeight(event.nativeEvent.layout.height)}
+          style={styles.screen}
         >
-          <View style={styles.brand}>
-            <View style={styles.brandMark} />
-            <Text style={styles.brandText}>TRUE MAFIA</Text>
-            <Text style={styles.brandCaption}>THE TOWN NEVER TRUSTS.</Text>
-          </View>
-          {children}
-        </ScrollView>
+          <LayoutContext.Provider value={{ compact, dense }}>
+            <View
+              testID="screen-content"
+              style={[
+                styles.content,
+                compact && styles.compactContent,
+                centered && styles.centered
+              ]}
+            >
+              {branded && !dense && (
+                <View style={[styles.brand, compact && { marginBottom: 12 }]}>
+                  <Image
+                    source={require("../resources/true_story.jpg")}
+                    style={styles.brandLogo}
+                  />
+                  <Text style={styles.brandText}>TRUE STORY · V2</Text>
+                </View>
+              )}
+              {children}
+            </View>
+          </LayoutContext.Provider>
+        </View>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
 
 export function Heading({ eyebrow, title, subtitle }) {
+  const { compact, dense } = useContext(LayoutContext);
   return (
-    <View style={styles.heading}>
-      {!!eyebrow && <Text style={styles.eyebrow}>{eyebrow}</Text>}
-      <Text accessibilityRole="header" style={styles.title}>
+    <View style={[styles.heading, compact && { marginBottom: dense ? 6 : 12 }]}>
+      {!dense && !!eyebrow && <Text style={styles.eyebrow}>{eyebrow}</Text>}
+      <Text
+        accessibilityRole="header"
+        numberOfLines={2}
+        adjustsFontSizeToFit
+        minimumFontScale={0.75}
+        style={[
+          styles.title,
+          compact && { fontSize: dense ? 20 : 27, lineHeight: dense ? 24 : 32 }
+        ]}
+      >
         {title}
       </Text>
-      {!!subtitle && <Text style={styles.subtitle}>{subtitle}</Text>}
+      {!compact && !!subtitle && (
+        <Text style={styles.subtitle}>{subtitle}</Text>
+      )}
     </View>
   );
 }
 
 export function Action({ children, onPress, secondary = false }) {
+  const { dense } = useContext(LayoutContext);
   return (
     <TouchableHighlight
       accessibilityRole="button"
       onPress={onPress}
       underlayColor={secondary ? colors.elevated : colors.redPressed}
-      style={[styles.action, secondary && styles.secondary]}
+      style={[
+        styles.action,
+        dense && { minHeight: 36, paddingVertical: 6, marginBottom: 6 },
+        secondary && styles.secondary
+      ]}
     >
       <View style={styles.actionContent}>
-        <Text style={styles.actionText}>{children}</Text>
+        <Text numberOfLines={2} adjustsFontSizeToFit style={styles.actionText}>
+          {children}
+        </Text>
         <Text accessible={false} style={styles.arrow}>
           →
         </Text>
@@ -67,14 +106,25 @@ export function Action({ children, onPress, secondary = false }) {
   );
 }
 
-export function Card({ children }) {
-  return <View style={styles.card}>{children}</View>;
+export function Card({ children, fill = false }) {
+  const { compact } = useContext(LayoutContext);
+  return (
+    <View
+      style={[
+        styles.card,
+        compact && { padding: 12, marginBottom: 12 },
+        fill && styles.fill
+      ]}
+    >
+      {children}
+    </View>
+  );
 }
 
 export function Phase({ eyebrow, title, subtitle, children, symbol = "☾" }) {
   return (
     <Screen centered>
-      <View style={styles.phaseIcon}>
+      <View style={[styles.phaseIcon, { flexShrink: 1 }]}>
         <Text style={styles.symbol}>{symbol}</Text>
       </View>
       <Heading eyebrow={eyebrow} title={title} subtitle={subtitle} />
@@ -91,10 +141,12 @@ export function RoleCard({ eyebrow, name, role, image, children }) {
         title={name}
         subtitle="For your eyes only. Keep your identity secret."
       />
-      <Card>
+      <Card fill>
         <Image source={image} style={styles.roleImage} resizeMode="contain" />
         <Text style={styles.eyebrow}>IDENTITY</Text>
-        <Text style={styles.roleName}>{role}</Text>
+        <Text numberOfLines={1} adjustsFontSizeToFit style={styles.roleName}>
+          {role}
+        </Text>
       </Card>
       {children}
       <Text style={styles.footnote}>Confirm before passing the phone.</Text>
@@ -105,8 +157,9 @@ export function RoleCard({ eyebrow, name, role, image, children }) {
 // Keep the original seating order while sharing selection presentation.
 const seats = [[1, 10], [2, 9], [3, 8], [4, 7], [5, 6]];
 export function PlayerPicker({ players, selected, onSelect }) {
+  const { compact, dense } = useContext(LayoutContext);
   return (
-    <View style={styles.seats}>
+    <View testID="player-picker" style={styles.seats}>
       {seats.map((row, index) => (
         <View key={index} style={styles.seatRow}>
           {row.map(number => {
@@ -121,13 +174,18 @@ export function PlayerPicker({ players, selected, onSelect }) {
                 accessibilityState={{ selected: active }}
                 underlayColor={colors.redSoft}
                 onPress={() => onSelect(number)}
-                style={[styles.seat, active && styles.selectedSeat]}
+                style={[
+                  styles.seat,
+                  compact && { padding: 4 },
+                  active && styles.selectedSeat
+                ]}
               >
                 <View>
                   <View style={styles.seatTop}>
                     <Text
                       style={[
                         styles.seatNumber,
+                        dense && { fontSize: 14 },
                         active && styles.selectedNumber
                       ]}
                     >
@@ -135,9 +193,21 @@ export function PlayerPicker({ players, selected, onSelect }) {
                     </Text>
                     {active && <Text style={styles.check}>✓</Text>}
                   </View>
-                  <Text numberOfLines={2} style={styles.seatName}>
-                    {players[number - 1].name}
-                  </Text>
+                  {!dense && (
+                    <Text
+                      numberOfLines={1}
+                      style={[
+                        styles.seatName,
+                        compact && {
+                          fontSize: 11,
+                          lineHeight: 14,
+                          marginTop: 2
+                        }
+                      ]}
+                    >
+                      {players[number - 1].name}
+                    </Text>
+                  )}
                 </View>
               </TouchableHighlight>
             );
@@ -151,18 +221,22 @@ export function PlayerPicker({ players, selected, onSelect }) {
 export const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.background },
   content: {
-    flexGrow: 1,
-    padding: 24,
-    paddingBottom: 32,
+    flex: 1,
+    minHeight: 0,
+    padding: 20,
+    paddingBottom: 12,
     width: "100%",
     maxWidth: 560,
     alignSelf: "center"
   },
+  compactContent: { padding: 12 },
+  fill: { flex: 1, minHeight: 0 },
+  brandLogo: { width: 32, height: 32, borderRadius: 16, marginRight: 10 },
   centered: { justifyContent: "center" },
   brand: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 36,
+    marginBottom: 20,
     flexWrap: "wrap"
   },
   brandMark: {
@@ -217,11 +291,11 @@ export const styles = StyleSheet.create({
   action: {
     backgroundColor: colors.red,
     borderRadius: 14,
-    minHeight: 56,
+    minHeight: 48,
     justifyContent: "center",
     paddingHorizontal: 20,
-    paddingVertical: 16,
-    marginBottom: 12
+    paddingVertical: 12,
+    marginBottom: 8
   },
   secondary: {
     backgroundColor: colors.surface,
@@ -247,7 +321,13 @@ export const styles = StyleSheet.create({
     marginBottom: 28
   },
   symbol: { fontSize: 40, color: "#FF687B" },
-  roleImage: { width: "100%", height: 220, marginBottom: 24, borderRadius: 12 },
+  roleImage: {
+    width: "100%",
+    flex: 1,
+    minHeight: 0,
+    marginBottom: 12,
+    borderRadius: 12
+  },
   roleName: { color: colors.text, fontSize: 30, fontWeight: "800" },
   footnote: {
     color: colors.muted,
@@ -256,17 +336,23 @@ export const styles = StyleSheet.create({
     textAlign: "center",
     marginTop: 8
   },
-  seats: { marginBottom: 20 },
-  seatRow: { flexDirection: "row", marginHorizontal: -5 },
+  seats: { flex: 1, minHeight: 0, marginBottom: 8 },
+  seatRow: {
+    flex: 1,
+    minHeight: 0,
+    flexDirection: "row",
+    marginHorizontal: -4
+  },
   seat: {
     flex: 1,
     backgroundColor: colors.surface,
     borderWidth: 1,
     borderColor: colors.border,
     borderRadius: 14,
-    padding: 16,
-    margin: 5,
-    minHeight: 88
+    padding: 8,
+    margin: 4,
+    minHeight: 0,
+    justifyContent: "center"
   },
   selectedSeat: { backgroundColor: colors.redSoft, borderColor: colors.red },
   seatTop: {
@@ -274,7 +360,7 @@ export const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center"
   },
-  seatNumber: { color: colors.muted, fontSize: 23, fontWeight: "800" },
+  seatNumber: { color: colors.muted, fontSize: 20, fontWeight: "800" },
   selectedNumber: { color: colors.text },
   check: { color: "#FF687B", fontWeight: "800", fontSize: 18 },
   seatName: { color: colors.text, fontSize: 13, lineHeight: 18, marginTop: 6 }

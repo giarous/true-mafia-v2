@@ -128,13 +128,15 @@ export default class ListComponent extends Component<Props> {
           title="Take your seat."
           subtitle="These are your positions for the game. Remember your number."
         />
-        <Card>
+        <Card fill>
           {this.state.names.map((name, index) => (
             <View key={index} style={styles.row}>
               <Text style={styles.number}>
                 {String(index + 1).padStart(2, "0")}
               </Text>
-              <Text style={styles.name}>{name}</Text>
+              <Text numberOfLines={1} adjustsFontSizeToFit style={styles.name}>
+                {name}
+              </Text>
             </View>
           ))}
         </Card>
@@ -148,8 +150,9 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: "row",
     alignItems: "center",
-    minHeight: 46,
-    paddingVertical: 10,
+    flex: 1,
+    minHeight: 0,
+    paddingVertical: 0,
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderBottomColor: colors.border
   },

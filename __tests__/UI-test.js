@@ -81,3 +81,42 @@ it("keeps Mafia choices as strings and preserves the Don investigation route", (
     expect.objectContaining({ temp_kill_choice: "10" })
   );
 });
+
+it("uses a bounded, non-scrolling viewport and compacts controls when resized", () => {
+  const { ScrollView, StyleSheet, View } = require("react-native");
+  const tree = renderer.create(<Home navigation={navigation({})} />);
+  expect(tree.root.findAllByType(ScrollView)).toHaveLength(0);
+  const viewport = tree.root
+    .findAllByType(View)
+    .find(view => view.props.testID === "screen-viewport");
+  [480, 640, 900, 320].forEach(height => {
+    act(() =>
+      viewport.props.onLayout({
+        nativeEvent: { layout: { width: 360, height } }
+      })
+    );
+    expect(tree.root.findAllByType(TextInput)).toHaveLength(10);
+    const buttons = tree.root.findAllByType(TouchableHighlight);
+    expect(buttons).toHaveLength(2);
+    const style = StyleSheet.flatten(buttons[0].props.style);
+    expect(style.minHeight).toBe(height < 430 ? 36 : 48);
+    expect(tree.root.findAllByType(ScrollView)).toHaveLength(0);
+  });
+});
+
+it("shows the exact supplied splash artwork and retains the three-second transition", () => {
+  jest.useFakeTimers();
+  const { Image } = require("react-native");
+  const StartScreen = require("../StartScreen").default;
+  const nav = navigation({});
+  const tree = renderer.create(<StartScreen navigation={nav} />);
+  expect(tree.root.findByType(Image).props.source).toEqual(
+    require("../resources/start_screen_2.jpg")
+  );
+  jest.advanceTimersByTime(2999);
+  expect(nav.replace).not.toHaveBeenCalled();
+  jest.advanceTimersByTime(1);
+  expect(nav.replace).toHaveBeenCalledWith("Home");
+  tree.unmount();
+  jest.useRealTimers();
+});

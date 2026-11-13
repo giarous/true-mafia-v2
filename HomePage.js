@@ -94,20 +94,29 @@ export default class Home extends Component {
           subtitle="Add your players, choose your seating, and let the secrets begin."
         />
         <View style={styles.players}>
-          {this.state.names.map((name, index) => (
-            <View key={index} style={styles.playerRow}>
-              <Text style={styles.number}>
-                {String(index + 1).padStart(2, "0")}
-              </Text>
-              <TextInput
-                style={styles.input}
-                accessibilityLabel={`Player ${index + 1} name`}
-                placeholder={`Player ${index + 1}`}
-                placeholderTextColor={colors.muted}
-                selectionColor={colors.red}
-                defaultValue={name}
-                onChangeText={text => this._updatePlayers(text, index)}
-              />
+          {[0, 5].map(start => (
+            <View key={start} style={styles.column}>
+              {this.state.names.slice(start, start + 5).map((name, offset) => {
+                const index = start + offset;
+                return (
+                  <View key={index} style={styles.playerRow}>
+                    <Text style={styles.number}>
+                      {String(index + 1).padStart(2, "0")}
+                    </Text>
+                    <TextInput
+                      style={styles.input}
+                      accessibilityLabel={`Player ${index + 1} name`}
+                      placeholder={`Player ${index + 1}`}
+                      placeholderTextColor={colors.muted}
+                      selectionColor={colors.red}
+                      defaultValue={name}
+                      returnKeyType="done"
+                      blurOnSubmit
+                      onChangeText={text => this._updatePlayers(text, index)}
+                    />
+                  </View>
+                );
+              })}
             </View>
           ))}
         </View>
@@ -122,25 +131,32 @@ export default class Home extends Component {
 
 const styles = StyleSheet.create({
   players: {
-    marginBottom: 24,
+    flex: 1,
+    minHeight: 0,
+    flexDirection: "row",
+    marginBottom: 12,
     backgroundColor: colors.surface,
     borderRadius: 18,
     borderWidth: 1,
     borderColor: colors.border,
-    paddingHorizontal: 16
+    paddingHorizontal: 8
   },
+  column: { flex: 1, marginHorizontal: 4 },
   playerRow: {
+    flex: 1,
+    minHeight: 0,
     flexDirection: "row",
     alignItems: "center",
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderBottomColor: colors.border
   },
-  number: { color: "#FF687B", fontSize: 12, fontWeight: "700", width: 34 },
+  number: { color: "#FF687B", fontSize: 12, fontWeight: "700", width: 24 },
   input: {
     flex: 1,
-    minHeight: 50,
+    height: "100%",
+    minHeight: 0,
     color: colors.text,
     fontSize: 15,
-    paddingVertical: 12
+    paddingVertical: 0
   }
 });
