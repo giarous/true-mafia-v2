@@ -1,256 +1,146 @@
-'use strict';
+import { Screen, Heading, Action } from "./ui/components";
+import { colors } from "./ui/theme";
 
-  import React, { Component } from 'react';
-  import {
-    View,
-    Text,
-    StyleSheet,
-    TextInput,
-    TouchableHighlight
-  } from 'react-native';
-  var Sound = require('react-native-sound');
-  
-  type Props = {};
-  
-  export default class Home extends Component {
-  
-    constructor(props) {
-      super(props);
-      this.state = {
-        data: null,
-        error: false,
-        names:['Player 1','Player 2','Player 3','Player 4','Player 5','Player 6','Player 7','Player 8','Player 9','Player 10',],
-      };
+import React, { Component } from "react";
+import { View, Text, StyleSheet, TextInput } from "react-native";
+var Sound = require("react-native-sound");
 
-      this._updatePlayers = this._updatePlayers.bind(this);
-    }
+type Props = {};
 
-    stop_song=()=>{
-      this.hello.stop();
-
-    }
-    
-    play_song = () =>{
-      
-      this.noch.play((success) => {
-        if (!success) {
-          console.log('Sound did not play')
-        }
-      })
-
-      setTimeout(()=>{
-
-        this.hello.play((success) => {
-        if (!success) {
-          console.log('Sound did not stopped properly')
-        }
-      })}, 10000); 
-
-      setTimeout(()=>{
-
-        this.noch.stop((success) => {
-        if (!success) {
-          console.log('Sound did not stopped properly')
-        }
-      })}, 15000); 
-
+export default class Home extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      data: null,
+      error: false,
+      names: [
+        "Player 1",
+        "Player 2",
+        "Player 3",
+        "Player 4",
+        "Player 5",
+        "Player 6",
+        "Player 7",
+        "Player 8",
+        "Player 9",
+        "Player 10"
+      ]
     };
 
-    showList = () => {
-      this.props.navigation.replace(
-        'List', {listings: this.state.names, randomize: false});
-    };
-
-    showList_2 = () => {
-      this.props.navigation.replace(
-        'List', {listings: this.state.names, randomize: true});
-    };
-
-    _updatePlayers = (text, index) => {
-      const newArray = [...this.state.names];
-      newArray[index] = text;
-      this.setState({ names: newArray });
-      console.log(this.state.names);
-      
-    };
-
-    handleChangeText(newText){
-      this.setState({value: newText});
-      
-    }
-    
-      componentDidMount() {
-
-      }
-
-  
-    render() {  
-    console.log(this.state.names);
-      return (
-          <View style = {styles.container}>
-              <View style={styles.titleContainer}>
-                <Text style={styles.title}>Enter the Players</Text>
-              </View>
-              <View style={styles.main}>
-                 <View style = {styles.col} >
-                  <TextInput 
-                      style = {styles.textInput} 
-                      placeholder="Player 1"
-                      defaultValue = {this.state.names[0]}
-                      onChangeText={(text) =>this._updatePlayers(text,0)} />
-                      
-                    <TextInput 
-                      style = {styles.textInput} 
-                      placeholder="Player 2"
-                      defaultValue = {this.state.names[1]}
-                      onChangeText={(text) =>this._updatePlayers(text,1)} />
-                
-                    <TextInput 
-                      style = {styles.textInput} 
-                      placeholder="Player 3"
-                      defaultValue = {this.state.names[2]}
-                      onChangeText={(text) =>this._updatePlayers(text,2)} />
-                      <TextInput 
-                      style = {styles.textInput} 
-                      placeholder="Player 4"
-                      defaultValue = {this.state.names[3]}
-                      onChangeText={(text) =>this._updatePlayers(text,3)} />
-                      <TextInput 
-                      style = {styles.textInput} 
-                      placeholder="Player 5"
-                      defaultValue = {this.state.names[4]}
-                      onChangeText={(text) =>this._updatePlayers(text,4)} />
-                 </View>
-                 <View style = {styles.col} >
-                  <TextInput 
-                      style = {styles.textInput} 
-                      placeholder="Player 6"
-                      defaultValue = {this.state.names[5]}
-                      onChangeText={(text) =>this._updatePlayers(text,5)} />
-                      <TextInput 
-                      style = {styles.textInput} 
-                      placeholder="Player 7"
-                      defaultValue = {this.state.names[6]}
-                      onChangeText={(text) =>this._updatePlayers(text,6)} />
-                      <TextInput 
-                      style = {styles.textInput} 
-                      placeholder="Player 8"
-                      defaultValue = {this.state.names[7]}
-                      onChangeText={(text) =>this._updatePlayers(text,7)} />
-                      <TextInput 
-                      style = {styles.textInput} 
-                      placeholder="Player 9"
-                      defaultValue = {this.state.names[8]}
-                      onChangeText={(text) =>this._updatePlayers(text,8)} />
-                      <TextInput 
-                      style = {styles.textInput} 
-                      placeholder="Player 10"
-                      defaultValue = {this.state.names[9]}
-                      onChangeText={(text) =>this._updatePlayers(text,9)} />
-                 </View>
-
-              </View>
-              <View style = {styles.buttonFrame}>
-              <TouchableHighlight
-                          style = {styles.button}
-                          underlayColor= "white"
-                          onPress = {this.showList}
-                      >
-                      <Text
-                          style={styles.buttonText}>
-                         Keep Positions
-                      </Text>
-                  </TouchableHighlight>
-                  <TouchableHighlight
-                          style = {styles.button}
-                          underlayColor= "white"
-                          onPress = {this.showList_2}
-                      >
-                      <Text
-                          style={styles.buttonText}>
-                         Randomize Positions
-                      </Text>
-                  </TouchableHighlight>
-                  
-              </View>
-              
-          </View>
-          
-      )
-    }
+    this._updatePlayers = this._updatePlayers.bind(this);
   }
-  
-  const styles = StyleSheet.create({
-  
-    container: {
-          flex: 1,
-          flexDirection: 'column',
-          justifyContent: 'space-between',
-          backgroundColor: '#2a8ab7',
-          
-        },
 
-        col: {
-          flex: 1,
-          marginHorizontal: 10,
-          flexDirection: 'column',
-          justifyContent: 'center',
-          
-        },
-  
-    main: {
-      marginHorizontal: 5,
-      flexDirection: 'row',
-      justifyContent: 'center',
-      backgroundColor: '#2a8ab7'
-    },
-    titleContainer: {
-      height: 70,
-      marginHorizontal: 50,
-      flexDirection: 'column',
-      justifyContent: 'center',
-      backgroundColor: '#2a8ab7'
-    },
+  stop_song = () => {
+    this.hello.stop();
+  };
 
-    title: {
-      fontSize: 25,
-      fontWeight: 'bold',
-      color: 'white',
-      textAlign: 'center'
-    },
+  play_song = () => {
+    this.noch.play(success => {
+      if (!success) {
+        console.log("Sound did not play");
+      }
+    });
 
-    buttonText: {
-      fontSize: 18,
-      fontWeight: 'bold',
-      color: '#111',
-      alignSelf: 'center'
-    },
+    setTimeout(() => {
+      this.hello.play(success => {
+        if (!success) {
+          console.log("Sound did not stopped properly");
+        }
+      });
+    }, 10000);
 
-    textInput: {
-    height: 45,
-      marginTop: 3,
-      fontSize: 16,
-      fontWeight: 'bold',
-      backgroundColor: 'white',
-      color: '#111'
-    },
+    setTimeout(() => {
+      this.noch.stop(success => {
+        if (!success) {
+          console.log("Sound did not stopped properly");
+        }
+      });
+    }, 15000);
+  };
 
-    buttonFrame:{
-      height: 90,  
-      fontSize: 20,
-      fontWeight: 'bold',
-      color: 'white',
-      textAlign: 'center',
-      marginBottom: 20
-    },
-    button: {
-      flex:1,
-      backgroundColor:'white',
-      borderColor: 'white',
-      borderWidth: 1,
-      borderRadius: 8,
-      marginTop: 10,
-      marginHorizontal: 50,
-      justifyContent: 'center'
-    }
-  });
+  showList = () => {
+    this.props.navigation.replace("List", {
+      listings: this.state.names,
+      randomize: false
+    });
+  };
+
+  showList_2 = () => {
+    this.props.navigation.replace("List", {
+      listings: this.state.names,
+      randomize: true
+    });
+  };
+
+  _updatePlayers = (text, index) => {
+    const newArray = [...this.state.names];
+    newArray[index] = text;
+    this.setState({ names: newArray });
+    console.log(this.state.names);
+  };
+
+  handleChangeText(newText) {
+    this.setState({ value: newText });
+  }
+
+  componentDidMount() {}
+
+  render() {
+    return (
+      <Screen>
+        <Heading
+          eyebrow="NEW GAME · 10 PLAYERS"
+          title="Gather the town."
+          subtitle="Add your players, choose your seating, and let the secrets begin."
+        />
+        <View style={styles.players}>
+          {this.state.names.map((name, index) => (
+            <View key={index} style={styles.playerRow}>
+              <Text style={styles.number}>
+                {String(index + 1).padStart(2, "0")}
+              </Text>
+              <TextInput
+                style={styles.input}
+                accessibilityLabel={`Player ${index + 1} name`}
+                placeholder={`Player ${index + 1}`}
+                placeholderTextColor={colors.muted}
+                selectionColor={colors.red}
+                defaultValue={name}
+                onChangeText={text => this._updatePlayers(text, index)}
+              />
+            </View>
+          ))}
+        </View>
+        <Action onPress={this.showList}>Keep positions</Action>
+        <Action secondary onPress={this.showList_2}>
+          Randomize positions
+        </Action>
+      </Screen>
+    );
+  }
+}
+
+const styles = StyleSheet.create({
+  players: {
+    marginBottom: 24,
+    backgroundColor: colors.surface,
+    borderRadius: 18,
+    borderWidth: 1,
+    borderColor: colors.border,
+    paddingHorizontal: 16
+  },
+  playerRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: colors.border
+  },
+  number: { color: "#FF687B", fontSize: 12, fontWeight: "700", width: 34 },
+  input: {
+    flex: 1,
+    minHeight: 50,
+    color: colors.text,
+    fontSize: 15,
+    paddingVertical: 12
+  }
+});
