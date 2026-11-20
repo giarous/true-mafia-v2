@@ -3,7 +3,11 @@ package com.truemafia;
 import android.app.Application;
 import android.util.Log;
 
-import com.facebook.react.PackageList;
+import com.facebook.react.shell.MainReactPackage;
+import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
+import com.corbt.keepawake.KCKeepAwakePackage;
+import com.zmxv.RNSound.RNSoundPackage;
+import java.util.Arrays;
 import com.facebook.hermes.reactexecutor.HermesExecutorFactory;
 import com.facebook.react.bridge.JavaScriptExecutorFactory;
 import com.facebook.react.ReactApplication;
@@ -24,7 +28,11 @@ public class MainApplication extends Application implements ReactApplication {
     @Override
     protected List<ReactPackage> getPackages() {
       @SuppressWarnings("UnnecessaryLocalVariable")
-      List<ReactPackage> packages = new PackageList(this).getPackages();
+      List<ReactPackage> packages = Arrays.<ReactPackage>asList(
+          new MainReactPackage(),
+          new RNGestureHandlerPackage(),
+          new KCKeepAwakePackage(),
+          new RNSoundPackage());
       // Packages that cannot be autolinked yet can be added manually here, for example:
       // packages.add(new MyReactNativePackage());
       return packages;

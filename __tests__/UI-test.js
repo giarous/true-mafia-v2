@@ -8,6 +8,10 @@ import Killing from "../KillingOptions";
 
 jest.mock("react-native-sound", () => jest.fn());
 
+// Keep React Native StatusBar immediates on the same timer implementation.
+jest.useFakeTimers();
+afterAll(() => jest.useRealTimers());
+
 const players = Array.from({ length: 10 }, (_, index) => ({
   name: `Guest ${index + 1}`,
   role: index === 0 ? "Don" : "Citizen"
@@ -105,18 +109,27 @@ it("uses a bounded, non-scrolling viewport and compacts controls when resized", 
 });
 
 it("shows the exact supplied splash artwork and retains the three-second transition", () => {
-  jest.useFakeTimers();
   const { Image } = require("react-native");
   const StartScreen = require("../StartScreen").default;
   const nav = navigation({});
   const tree = renderer.create(<StartScreen navigation={nav} />);
   expect(tree.root.findByType(Image).props.source).toEqual(
-    require("../resources/start_screen_2.jpg")
+    require("../resources/mafia_logo.png")
   );
   jest.advanceTimersByTime(2999);
   expect(nav.replace).not.toHaveBeenCalled();
   jest.advanceTimersByTime(1);
   expect(nav.replace).toHaveBeenCalledWith("Home");
   tree.unmount();
-  jest.useRealTimers();
+});
+
+it("uses True Mafia branding without a visible v2 suffix", () => {
+  const { Text } = require("react-native");
+  const tree = renderer.create(<Home navigation={navigation({})} />);
+  const labels = tree.root
+    .findAllByType(Text)
+    .map(node => node.props.children)
+    .filter(value => typeof value === "string");
+  expect(labels).toContain("TRUE MAFIA");
+  expect(labels.some(label => /\bv2\b/i.test(label))).toBe(false);
 });

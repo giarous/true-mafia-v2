@@ -1,0 +1,33 @@
+apply plugin: 'com.android.library'
+
+def moduleNamespaces = [
+    'react-native-gesture-handler': 'com.swmansion.gesturehandler.react',
+    'react-native-keep-awake': 'com.corbt.keepawake',
+    'react-native-sound': 'com.zmxv.RNSound'
+]
+def moduleRoot = file("${rootDir}/../node_modules/${project.name}/android")
+
+android {
+    namespace moduleNamespaces[project.name]
+    compileSdk rootProject.ext.compileSdkVersion
+    defaultConfig {
+        minSdk rootProject.ext.minSdkVersion
+        targetSdk rootProject.ext.targetSdkVersion
+    }
+    sourceSets {
+        main {
+            // These modules' original manifests only declare their old namespace.
+            manifest.srcFile file('../AndroidManifest.xml')
+            java.srcDirs = [new File(moduleRoot, 'src/main/java'), new File(moduleRoot, 'lib/src/main/java')]
+            res.srcDirs = [new File(moduleRoot, 'src/main/res')]
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+    implementation 'com.facebook.react:react-native:0.60.4'
+}

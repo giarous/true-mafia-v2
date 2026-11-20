@@ -1,3 +1,8 @@
 rootProject.name = 'TrueMafia'
-apply from: file("../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesSettingsGradle(settings)
 include ':app'
+// These small build adapters preserve the installed native module sources while
+// providing the namespace and source layout required by the modern Android plugin.
+['react-native-gesture-handler', 'react-native-keep-awake', 'react-native-sound'].each { name ->
+    include ":${name}"
+    project(":${name}").projectDir = file("native-modules/${name}")
+}

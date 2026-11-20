@@ -21,12 +21,12 @@ export default class StartScreen extends Component<Props> {
       <Screen branded={false}>
         <View style={styles.content}>
           <Image
-            source={require("./resources/start_screen_2.jpg")}
+            source={require("./resources/mafia_logo.png")}
             style={styles.logo}
             resizeMode="contain"
-            accessibilityLabel="True Story Mafia Hamburg"
+            accessibilityLabel="True Mafia logo"
           />
-          <Text style={styles.version}>MAFIA V2</Text>
+          <Text style={styles.version}>TRUE MAFIA</Text>
           <Text style={styles.caption}>THE GAME IS ABOUT TO BEGIN</Text>
         </View>
       </Screen>
@@ -36,7 +36,7 @@ export default class StartScreen extends Component<Props> {
 
 const styles = StyleSheet.create({
   content: { flex: 1, justifyContent: "center", alignItems: "center" },
-  logo: { width: "100%", flex: 1, minHeight: 0, maxHeight: 300 },
+  logo: { width: "100%", flex: 1, minHeight: 0, maxHeight: 320 },
   version: {
     color: colors.text,
     fontSize: 22,

@@ -42,10 +42,10 @@ export function Screen({ children, centered = false, branded = true }) {
               {branded && !dense && (
                 <View style={[styles.brand, compact && { marginBottom: 12 }]}>
                   <Image
-                    source={require("../resources/true_story.jpg")}
+                    source={require("../resources/mafia_logo.png")}
                     style={styles.brandLogo}
                   />
-                  <Text style={styles.brandText}>TRUE STORY · V2</Text>
+                  <Text style={styles.brandText}>TRUE MAFIA</Text>
                 </View>
               )}
               {children}
