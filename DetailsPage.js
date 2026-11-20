@@ -38,15 +38,25 @@ export default class DetailsComponent extends Component<Props> {
         eyebrow="ROLE REVEAL"
         title="Your secret awaits."
         subtitle="Read your role privately, then pass the phone."
-        symbol="◇"
+        symbol={null}
+        centered
       >
         <Card>
-          <Text style={{ color: colors.text, fontSize: 22, fontWeight: "700" }}>
+          <Text
+            style={{
+              color: colors.text,
+              fontSize: 22,
+              fontWeight: "700",
+              textAlign: "center"
+            }}
+          >
             #{this.state.counter + 1} ·{" "}
             {this.state.players[this.state.counter].name}
           </Text>
         </Card>
-        <Action onPress={this.confirmRole}>Reveal my role</Action>
+        <Action centered onPress={this.confirmRole}>
+          Reveal my role
+        </Action>
       </Phase>
     );
   }

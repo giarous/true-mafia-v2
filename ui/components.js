@@ -14,7 +14,12 @@ import { colors } from "./theme";
 
 // Measure the usable area, including Android resize when the keyboard opens.
 const LayoutContext = createContext({ compact: false, dense: false });
-export function Screen({ children, centered = false, branded = true }) {
+export function Screen({
+  children,
+  centered = false,
+  branded = true,
+  centeredBrand = false
+}) {
   const [height, setHeight] = useState(800);
   const compact = height < 660;
   const dense = height < 430;
@@ -40,7 +45,13 @@ export function Screen({ children, centered = false, branded = true }) {
               ]}
             >
               {branded && !dense && (
-                <View style={[styles.brand, compact && { marginBottom: 12 }]}>
+                <View
+                  style={[
+                    styles.brand,
+                    compact && { marginBottom: 12 },
+                    centeredBrand && { justifyContent: "center" }
+                  ]}
+                >
                   <Image
                     source={require("../resources/mafia_logo.png")}
                     style={styles.brandLogo}
@@ -57,11 +68,15 @@ export function Screen({ children, centered = false, branded = true }) {
   );
 }
 
-export function Heading({ eyebrow, title, subtitle }) {
+export function Heading({ eyebrow, title, subtitle, centered = false }) {
   const { compact, dense } = useContext(LayoutContext);
   return (
     <View style={[styles.heading, compact && { marginBottom: dense ? 6 : 12 }]}>
-      {!dense && !!eyebrow && <Text style={styles.eyebrow}>{eyebrow}</Text>}
+      {!dense && !!eyebrow && (
+        <Text style={[styles.eyebrow, centered && { textAlign: "center" }]}>
+          {eyebrow}
+        </Text>
+      )}
       <Text
         accessibilityRole="header"
         numberOfLines={2}
@@ -69,19 +84,27 @@ export function Heading({ eyebrow, title, subtitle }) {
         minimumFontScale={0.75}
         style={[
           styles.title,
+          centered && { textAlign: "center" },
           compact && { fontSize: dense ? 20 : 27, lineHeight: dense ? 24 : 32 }
         ]}
       >
         {title}
       </Text>
       {!compact && !!subtitle && (
-        <Text style={styles.subtitle}>{subtitle}</Text>
+        <Text style={[styles.subtitle, centered && { textAlign: "center" }]}>
+          {subtitle}
+        </Text>
       )}
     </View>
   );
 }
 
-export function Action({ children, onPress, secondary = false }) {
+export function Action({
+  children,
+  onPress,
+  secondary = false,
+  centered = false
+}) {
   const { dense } = useContext(LayoutContext);
   return (
     <TouchableHighlight
@@ -95,12 +118,18 @@ export function Action({ children, onPress, secondary = false }) {
       ]}
     >
       <View style={styles.actionContent}>
-        <Text numberOfLines={2} adjustsFontSizeToFit style={styles.actionText}>
+        <Text
+          numberOfLines={2}
+          adjustsFontSizeToFit
+          style={[styles.actionText, centered && { textAlign: "center" }]}
+        >
           {children}
         </Text>
-        <Text accessible={false} style={styles.arrow}>
-          →
-        </Text>
+        {!centered && (
+          <Text accessible={false} style={styles.arrow}>
+            →
+          </Text>
+        )}
       </View>
     </TouchableHighlight>
   );
@@ -121,13 +150,27 @@ export function Card({ children, fill = false }) {
   );
 }
 
-export function Phase({ eyebrow, title, subtitle, children, symbol = "☾" }) {
+export function Phase({
+  eyebrow,
+  title,
+  subtitle,
+  children,
+  symbol = "☾",
+  centered = false
+}) {
   return (
-    <Screen centered>
-      <View style={[styles.phaseIcon, { flexShrink: 1 }]}>
-        <Text style={styles.symbol}>{symbol}</Text>
-      </View>
-      <Heading eyebrow={eyebrow} title={title} subtitle={subtitle} />
+    <Screen centered centeredBrand={centered}>
+      {symbol && (
+        <View style={[styles.phaseIcon, { flexShrink: 1 }]}>
+          <Text style={styles.symbol}>{symbol}</Text>
+        </View>
+      )}
+      <Heading
+        eyebrow={eyebrow}
+        title={title}
+        subtitle={subtitle}
+        centered={centered}
+      />
       {children}
     </Screen>
   );
