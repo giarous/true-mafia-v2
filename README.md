@@ -10,6 +10,16 @@ True Mafia guides a ten-player game through private role reveals, narrated night
 
 [Download the Android APK](https://github.com/giarous/true-mafia-v2/raw/refs/heads/main/releases/true-mafia-v2.apk) · [Android build guide](android/README.md)
 
+## Screenshots
+
+Framed app previews in 9:16 format. The dark Mafia figure has an added outline for visibility.
+
+| Player setup | Private role hand-off |
+| :---: | :---: |
+| <img src=".github/screenshots/player-setup.png" alt="Player setup with ten names and seating options" width="300" /> | <img src=".github/screenshots/role-reveal.png" alt="Centered private role reveal for Superman" width="300" /> |
+| **Sheriff identity** | **Mafia identity** |
+| <img src=".github/screenshots/sheriff.png" alt="Sheriff role reveal for Tony Stark" width="300" /> | <img src=".github/screenshots/mafia.png" alt="Mafia role reveal for Al Capone with an outlined figure" width="300" /> |
+
 ## Features
 
 - Ten-player setup with custom names and optional randomized seating.
