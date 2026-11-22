@@ -14,11 +14,9 @@ True Mafia guides a ten-player game through private role reveals, narrated night
 
 Framed app previews in 9:16 format. The dark Mafia figure has an added outline for visibility.
 
-| Player setup | Private role hand-off |
-| :---: | :---: |
-| <img src=".github/screenshots/player-setup.png" alt="Player setup with ten names and seating options" width="300" /> | <img src=".github/screenshots/role-reveal.png" alt="Centered private role reveal for Superman" width="300" /> |
-| **Sheriff identity** | **Mafia identity** |
-| <img src=".github/screenshots/sheriff.png" alt="Sheriff role reveal for Tony Stark" width="300" /> | <img src=".github/screenshots/mafia.png" alt="Mafia role reveal for Al Capone with an outlined figure" width="300" /> |
+| Player setup | Role reveal | Sheriff | Mafia |
+| :---: | :---: | :---: | :---: |
+| <img src=".github/screenshots/player-setup.webp" alt="Player setup" width="160" /> | <img src=".github/screenshots/role-reveal.webp" alt="Private role reveal" width="160" /> | <img src=".github/screenshots/sheriff.webp" alt="Sheriff identity" width="160" /> | <img src=".github/screenshots/mafia.webp" alt="Mafia identity with outlined artwork" width="160" /> |
 
 ## Features
 

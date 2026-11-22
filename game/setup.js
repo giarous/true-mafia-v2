@@ -28,3 +28,12 @@ export function shuffle(items) {
   }
   return result;
 }
+
+/** Deal into new objects so the setup screen never mutates an existing roster. */
+export function dealRoles(players, names, roles) {
+  return players.map((player, index) => ({
+    ...player,
+    name: names[index],
+    role: roles[index],
+  }));
+}

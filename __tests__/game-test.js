@@ -1,4 +1,4 @@
-import {createPlayers, INITIAL_ROLES, shuffle} from '../game/setup';
+import {createPlayers, INITIAL_ROLES, shuffle, dealRoles} from '../game/setup';
 import {
   getInvestigationRole,
   getRoleImage,
@@ -30,4 +30,13 @@ it('hides the Don in investigation results and retains the fallback artwork', ()
   expect(getInvestigationRole('Citizen')).toBe('Citizen');
   expect(getRoleImage('Unknown')).toBe(fallbackRoleImage);
   expect(getRoleImage('toString')).toBe(fallbackRoleImage);
+});
+
+it('deals names and roles without mutating the previous player objects', () => {
+  const original = createPlayers();
+  const names = original.map((_, index) => `Guest ${index + 1}`);
+  const dealt = dealRoles(original, names, INITIAL_ROLES);
+  expect(original[0]).toEqual({pos: 0, name: 'Player 1', role: 'Default'});
+  expect(dealt[0]).toEqual({pos: 0, name: 'Guest 1', role: 'Sheriff'});
+  expect(dealt.every((player, index) => player !== original[index])).toBe(true);
 });

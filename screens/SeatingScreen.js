@@ -1,4 +1,4 @@
-import {createPlayers, INITIAL_ROLES, shuffle} from '../game/setup';
+import {createPlayers, INITIAL_ROLES, shuffle, dealRoles} from '../game/setup';
 import {loadSound, playSound} from '../game/audio';
 import {Screen, Heading, Action, Card} from '../ui/components';
 import {colors} from '../ui/theme';
@@ -34,7 +34,9 @@ export default class SeatingScreen extends Component {
       playSound(this.introduction);
     }, 2000);
     playSound(this.night);
-  }; // Shuffle roles independently from seating so both placement modes stay fair.
+  };
+
+  // Shuffle roles independently from seating so both placement modes stay fair.
 
   shuffleRoles = () =>
     this.setState({
@@ -45,22 +47,19 @@ export default class SeatingScreen extends Component {
       names: shuffle(this.state.names),
     });
   assignRoles = () => {
-    const newArray = [...this.state.players];
-
-    for (let i = 0; i < 10; i++) {
-      newArray[i].name = this.state.names[i];
-      newArray[i].role = this.state.roles[i];
-    }
-
-    this.setState({
-      players: newArray,
-    });
+    const players = dealRoles(
+      this.state.players,
+      this.state.names,
+      this.state.roles,
+    );
+    this.setState({players});
     this.playPhaseAudio();
-    this.startRoleReveal();
+    // Pass the new roster directly: React may not have committed setState yet.
+    this.startRoleReveal(players);
   };
-  startRoleReveal = () => {
+  startRoleReveal = players => {
     this.props.navigation.replace('Details', {
-      players_data: this.state.players,
+      players_data: players,
       temp_counter: this.state.counter,
     });
   };
