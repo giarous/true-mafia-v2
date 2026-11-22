@@ -1,11 +1,11 @@
 {
   "name": "TrueMafia",
-  "version": "0.0.1",
+  "version": "2.4.0",
   "private": true,
   "scripts": {
     "start": "react-native start",
     "test": "jest",
-    "lint": "eslint ."
+    "lint": "eslint App.js index.js screens game ui __tests__ jest.setup.js"
   },
   "dependencies": {
     "react": "16.8.6",
@@ -27,6 +27,15 @@
     "react-test-renderer": "16.8.6"
   },
   "jest": {
-    "preset": "react-native"
+    "preset": "react-native",
+    "setupFiles": [
+      "<rootDir>/jest.setup.js"
+    ],
+    "transformIgnorePatterns": [
+      "node_modules/(?!(react-native|@react-native|react-navigation|@react-navigation))"
+    ]
+  },
+  "engines": {
+    "node": ">=16 <17"
   }
 }

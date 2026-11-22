@@ -11,7 +11,7 @@ The installed app is **True Mafia**. Its application ID is `com.truemafia.v2`, s
 
 The APK targets API 34 and retains the original minimum API 16. Targeting Android 14 avoids the old Android 9 target without opting into the latest Android release's behavior changes.
 
-From the repository root, run `yarn install --frozen-lockfile --non-interactive`. Use Yarn: the old npm lockfile is incomplete. Set `ANDROID_HOME` to your SDK directory and activate the JDK and Node versions above.
+From the repository root, run `yarn install --frozen-lockfile --non-interactive`. Yarn is the project's package manager. Set `ANDROID_HOME` to your SDK directory and activate the JDK and Node versions above.
 
 ## Build a standalone test APK
 
@@ -42,4 +42,4 @@ The app retains React Native 0.60.4 and its game logic. The build adapters in `n
 
 ## Checks
 
-From the repository root, `yarn test UI-test --runInBand --watch=false` checks entry/selection behavior, non-scrolling resize behavior, branding, and the three-second splash transition. The original app test has a separate pre-existing gesture-handler mock issue. APK builds and signature/resource checks do not replace testing on a device. iOS assets are supplied but require macOS/Xcode for native validation.
+From the repository root, `yarn test --runInBand --watch=false` checks entry/selection behavior, non-scrolling resize behavior, branding, and the three-second splash transition. APK builds and signature/resource checks do not replace testing on a device. iOS assets are supplied but require macOS/Xcode for native validation.

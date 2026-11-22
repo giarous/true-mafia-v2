@@ -1,82 +1,40 @@
-import React from 'react';
-import {
-  createStackNavigator,
-} from 'react-navigation-stack';
-import {createSwitchNavigator, createAppContainer} from 'react-navigation'
-import Home from './HomePage';
-import DetailsComponent from './DetailsPage';
-import ListComponent from './ListComponent';
-import DayComponent from './FirstDay';
-import NightComponent from './Night';
-import CheckRole from './Role';
-import KillandCheck from './Killandcheck';
-import Killing from './KillingOptions';
-import Checking from './CheckSomeone';
-import ConfirmCheck from './ConfirmCheck';
-import SecondDay from './SecondDay';
-import StartScreen from './StartScreen';
-import MafiaTimeComponent from './MafiaTime';
-'use strict';
-type Props = {}; 
+import {createAppContainer} from 'react-navigation';
+import {createStackNavigator} from 'react-navigation-stack';
+import SplashScreen from './screens/SplashScreen';
+import PlayerSetupScreen from './screens/PlayerSetupScreen';
+import SeatingScreen from './screens/SeatingScreen';
+import RoleRevealScreen from './screens/RoleRevealScreen';
+import RoleScreen from './screens/RoleScreen';
+import MafiaPhaseScreen from './screens/MafiaPhaseScreen';
+import FirstDayScreen from './screens/FirstDayScreen';
+import NightScreen from './screens/NightScreen';
+import NightActionScreen from './screens/NightActionScreen';
+import VictimSelectionScreen from './screens/VictimSelectionScreen';
+import InvestigationScreen from './screens/InvestigationScreen';
+import InvestigationResultScreen from './screens/InvestigationResultScreen';
+import DaybreakScreen from './screens/DaybreakScreen';
 
-const App = createAppContainer(createStackNavigator({
-  Start: {
-    screen: StartScreen
-  },
-  Home: { 
-    screen: Home, 
-    navigationOptions: { title: "Cure for Maska's insomnia :D" }
-  },
-  List: {
-    screen: ListComponent,
-    navigationOptions: {title: "Positions on the table" }
-  },
+// Route names and parameter keys stay stable throughout the pass-the-phone flow.
+const routes = {
+  Start: {screen: SplashScreen},
+  Home: {screen: PlayerSetupScreen},
+  List: {screen: SeatingScreen},
+  Details: {screen: RoleRevealScreen},
+  Role: {screen: RoleScreen},
+  MafiaTime: {screen: MafiaPhaseScreen},
+  Day: {screen: FirstDayScreen},
+  Night: {screen: NightScreen},
+  Second_Night: {screen: NightActionScreen},
+  Kill: {screen: VictimSelectionScreen},
+  Check: {screen: InvestigationScreen},
+  Confirm: {screen: InvestigationResultScreen},
+  Second_Day: {screen: DaybreakScreen},
+};
 
-  Details: {
-    screen: DetailsComponent,
-    navigationOptions: {title: "Introduction to roles" }
-  },
-  MafiaTime: {
-    screen: MafiaTimeComponent,
-    navigationOptions: {title: "Mafia time" }
-  },
-  Day: {
-    screen: DayComponent,
-    navigationOptions: {title: "First Day" }
-  },
-  Role: {
-    screen: CheckRole,
-    navigationOptions: {title: "Your Role"}
-  },
-
-  Night: {
-    screen: NightComponent,
-    navigationOptions: {title: "Regular Night" }
-  },
-  Second_Night: {
-    screen: KillandCheck,
-    navigationOptions: {title: "Check kills" }
-  },
-  Kill: {
-    screen: Killing,
-    navigationOptions: {title: "Choose kills" }
-  },
-  Check: {
-    screen: Checking,
-    navigationOptions: {title: "Choose who to check" }
-  },
-  Confirm: {
-    screen: ConfirmCheck,
-    navigationOptions: {title: "Your check is" }
-  },
-  Second_Day: {
-    screen: SecondDay,
-    navigationOptions: {title: "2nd Day" }
-  },
-  },
-  {
+export default createAppContainer(
+  createStackNavigator(routes, {
     initialRouteName: 'Start',
     mode: 'modal',
-    headerMode: 'none'
-  }));
-export default App;
+    headerMode: 'none',
+  }),
+);

@@ -1,14 +1,11 @@
-/**
- * @format
- */
-
-import 'react-native';
 import React from 'react';
-import App from '../App';
-
-// Note: test renderer must be required after react-native.
 import renderer from 'react-test-renderer';
+import App from '../App';
+import SplashScreen from '../screens/SplashScreen';
 
-it('renders correctly', () => {
-  renderer.create(<App />);
+it('opens the app on the splash screen', () => {
+  const tree = renderer.create(<App />);
+  expect(tree.root.findAllByType(SplashScreen)).toHaveLength(1);
+  tree.unmount();
+  jest.clearAllTimers();
 });
